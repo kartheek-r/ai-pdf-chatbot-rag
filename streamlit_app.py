@@ -94,7 +94,11 @@ Question:
 
 Answer:
 """
-
+llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
+    google_api_key=api_key,
+    temperature=0.3
+)
 with st.spinner("Generating Answer..."):
 
     response = llm.invoke(final_prompt)

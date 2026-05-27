@@ -10,10 +10,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Load API Key
-load_dotenv()
-
-api_key = os.getenv("GOOGLE_API_KEY")
-
+api_key = st.secrets["GOOGLE_API_KEY"]
 # Streamlit Title
 st.set_page_config(page_title="AI PDF Chatbot")
 st.title("📄 AI PDF Chatbot using RAG")

@@ -10,9 +10,6 @@ from langchain_community.vectorstores import FAISS
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from langchain.chains.question_answering import load_qa_chain
-from langchain.prompts import PromptTemplate
-
 # Load API key
 load_dotenv()
 
@@ -84,19 +81,24 @@ if uploaded_file:
             input_variables=["context", "question"]
         )
 
-        chain = load_qa_chain(
-            llm,
-            chain_type="stuff",
-            prompt=prompt
-        )
+        context = "\n".join([doc.page_content for doc in docs])
 
-        with st.spinner("Generating answer..."):
+final_prompt = f"""
+Answer the question using the provided context only.
 
-            response = chain.run(
-                input_documents=docs,
-                question=query
-            )
+Context:
+{context}
 
-        st.subheader("Answer")
+Question:
+{query}
 
-        st.write(response)
+Answer:
+"""
+
+with st.spinner("Generating Answer..."):
+
+    response = llm.invoke(final_prompt)
+
+st.subheader("Answer")
+
+st.write(response.content)

@@ -83,14 +83,14 @@ if uploaded_file:
 
         context = "\n".join([doc.page_content for doc in docs])
 
-final_prompt = f"""
-Answer the question using the provided context only.
+prompt_template = """
+Answer the question using the provided context.
 
 Context:
 {context}
 
 Question:
-{query}
+{question}
 
 Answer:
 """

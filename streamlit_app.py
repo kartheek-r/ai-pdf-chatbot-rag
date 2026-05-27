@@ -1,20 +1,23 @@
-
 import streamlit as st
+import google.generativeai as genai
 
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
-from langchain_google_genai import ChatGoogleGenerativeAI
-
-# Streamlit Page
+# Streamlit UI
 st.set_page_config(page_title="AI PDF Chatbot")
-
 st.title("📄 AI PDF Chatbot using RAG")
 
-# Read API Key from Streamlit Secrets
+# API Key
 api_key = st.secrets["GOOGLE_API_KEY"]
+
+# Configure Gemini
+genai.configure(api_key=api_key)
+
+# Gemini model
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Upload PDF
 uploaded_file = st.file_uploader(
@@ -32,10 +35,9 @@ if uploaded_file:
 
     # Load PDF
     loader = PyPDFLoader("temp.pdf")
-
     documents = loader.load()
 
-    # Split Text
+    # Split text
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,
         chunk_overlap=50
@@ -48,13 +50,13 @@ if uploaded_file:
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
-    # Vector DB
+    # Vector Store
     vector_store = FAISS.from_documents(
         chunks,
         embeddings
     )
 
-    # User Query
+    # Question Input
     query = st.text_input(
         "Ask a question from the PDF"
     )
@@ -79,16 +81,10 @@ Question:
 Answer:
 """
 
-        # Gemini Model
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash",
-            google_api_key=api_key
-        )
-
         with st.spinner("Generating answer..."):
 
-            response = llm.invoke(final_prompt)
+            response = model.generate_content(final_prompt)
 
         st.subheader("Answer")
 
-        st.write(response.content)
+        st.write(response.text)

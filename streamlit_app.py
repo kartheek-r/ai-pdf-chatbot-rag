@@ -45,7 +45,7 @@ def build_index(pdf_bytes: bytes):
     finally:
         os.remove(path)
     chunks = RecursiveCharacterTextSplitter(
-        chunk_size=500, chunk_overlap=50
+        chunk_size=1000, chunk_overlap=150
     ).split_documents(docs)
     return FAISS.from_documents(chunks, get_embeddings())
 
@@ -59,7 +59,7 @@ if uploaded_file:
     query = st.text_input("Ask a question from the PDF")
 
     if query:
-        docs = vector_store.similarity_search(query, k=4)
+        docs = vector_store.similarity_search(query, k=5)
         context = "\n\n".join(d.page_content for d in docs)
 
         prompt = f"""Answer the question using only the context below.

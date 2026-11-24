@@ -54,7 +54,8 @@ Answer + source pages shown in Streamlit
 
 ## 🖼️ App Screenshot
 
-![Chatbot UI](chatbot-ui.jpeg)
+![Resume Q&A](Screenshot_20261124_101828.jpg)
+![Long PDF answer with page sources](Screenshot_20261124_102554.jpg)
 
 ## ▶️ Run Locally
 
